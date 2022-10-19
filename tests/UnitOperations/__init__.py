@@ -31,6 +31,7 @@ def add_session(self: APITestCase, conn):
 
     return session_uuid
 
+
 def add_session_linkedin_standard(self: APITestCase):
     from pullgerAccountManager import authorizationsServers
     from pullgerSquirrel.connectors import connector
@@ -73,3 +74,4 @@ def make_all_session_authorization(self: APITestCase):
 def execute_task_in_the_queue(self: APITestCase):
     resultPost = self.client.post(f"/pullgerMSM/api/sessions/executeTaskInTheQueue")
     self.assertEqual(resultPost.status_code, 200, "Error on task executed.")
+
