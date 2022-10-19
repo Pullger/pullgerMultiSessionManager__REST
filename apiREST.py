@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from pullgerMultiSessionManager import api
 from pullgerAccountManager import authorizationsServers
 from pullgerSquirrel import connectors
-from pullgerLogin.pullgerMultiSessionManager.REST import logger
+from pullgerInternalControl.pullgerMultiSessionManager.REST.logging import logger
 from . import serializers
 
 
@@ -201,7 +201,7 @@ class OperationGetPage(APIView):
             statusResponse = status.HTTP_200_OK
         except BaseException as e:
             log_record = logger.info(
-                msg_private=f"{str(e)}",
+                msg=f"{str(e)}",
                 msg_public="Internal server error."
             )
             content['message'] = 'ERROR'
@@ -232,7 +232,7 @@ class OperationGetHTML(APIView):
             statusResponse = status.HTTP_200_OK
         except BaseException as e:
             log_record = logger.info(
-                msg_private=f"{str(e)}",
+                msg=f"{str(e)}",
                 msg_public="Internal server error."
             )
             content['message'] = 'ERROR'
@@ -242,3 +242,302 @@ class OperationGetHTML(APIView):
             pass
 
         return Response(content, status=statusResponse)
+
+
+class OperationElementsScan(APIView):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = 'post'
+    # serializer_class
+    # queryset
+
+    def post(self, request,  **kwargs):
+        content = {
+            'message': None
+        }
+
+        uuid_session = kwargs.get('uuid_session')
+
+        amount = None
+        try:
+            amount = api.operation_elements_scan(uuid_session=uuid_session)
+        except BaseException as e:
+            if hasattr(e, 'level'):
+                level_error = e.level
+            else:
+                level_error = 50
+            # -------------------------------
+            if hasattr(e, 'uuid_log'):
+                uuid_log = e.uuid_log
+            else:
+                uuid_log = None
+            # -------------------------------
+            if level_error <= 30:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    uuid_log=uuid_log
+                )
+            else:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    msg_public="Internal server error.",
+                    uuid_log=uuid_log
+                )
+
+            content['message'] = 'ERROR'
+            content['error'] = logRecord.msg_public
+            statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            content['message'] = 'Page successfully scanned.'
+            content['data'] = {'amount': amount}
+            statusResponse = status.HTTP_200_OK
+
+        return Response(content, status=statusResponse)
+
+
+class OperationElementsList(APIView):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = 'get'
+    # serializer_class
+    # queryset
+
+    def get(self, request,  **kwargs):
+        content = {
+            'message': None
+        }
+
+        uuid_session = kwargs.get('uuid_session')
+
+        try:
+            elements_list = api.operation_elements_list(uuid_session=uuid_session)
+            content['data'] = elements_list
+        except BaseException as e:
+            if hasattr(e, 'level'):
+                level_error = e.level
+            else:
+                level_error = 50
+            # -------------------------------
+            if hasattr(e, 'uuid_log'):
+                uuid_log = e.uuid_log
+            else:
+                uuid_log = None
+            # -------------------------------
+            if level_error <= 30:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    uuid_log=uuid_log
+                )
+            else:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    msg_public="Internal server error.",
+                    uuid_log=uuid_log
+                )
+
+            content['message'] = 'ERROR'
+            content['error'] = logRecord.msg_public
+            statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            statusResponse = status.HTTP_200_OK
+
+        return Response(content, status=statusResponse)
+
+
+class OperationElementsSendString(APIView):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = 'post'
+    # serializer_class
+    # queryset
+
+    def post(self, request,  **kwargs):
+        content = {
+            'message': None
+        }
+
+        uuid_session = kwargs.get('uuid_session')
+        uuid_element = kwargs.get('uuid_element')
+        send_string = request.data.get("string")
+
+        try:
+            api.operation_element_send_string(uuid_session=uuid_session, uuid_auto_element=uuid_element, string=send_string)
+        except BaseException as e:
+            if hasattr(e, 'level'):
+                level_error = e.level
+            else:
+                level_error = 50
+            # -------------------------------
+            if hasattr(e, 'uuid_log'):
+                uuid_log = e.uuid_log
+            else:
+                uuid_log = None
+            # -------------------------------
+            if level_error <= 30:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    uuid_log=uuid_log
+                )
+            else:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    msg_public="Internal server error.",
+                    uuid_log=uuid_log
+                )
+
+            content['message'] = 'ERROR'
+            content['error'] = logRecord.msg_public
+            statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            content['message'] = 'Page successfully scanned.'
+            content['data'] = {}
+            statusResponse = status.HTTP_200_OK
+
+        return Response(content, status=statusResponse)
+
+
+class OperationElementsSendEnter(APIView):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = 'post'
+    # serializer_class
+    # queryset
+
+    def post(self, request,  **kwargs):
+        content = {
+            'message': None
+        }
+
+        uuid_session = kwargs.get('uuid_session')
+        uuid_element = kwargs.get('uuid_element')
+
+        try:
+            api.operation_element_send_enter(uuid_session=uuid_session, uuid_auto_element=uuid_element)
+        except BaseException as e:
+            if hasattr(e, 'level'):
+                level_error = e.level
+            else:
+                level_error = 50
+            # -------------------------------
+            if hasattr(e, 'uuid_log'):
+                uuid_log = e.uuid_log
+            else:
+                uuid_log = None
+            # -------------------------------
+            if level_error <= 30:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    uuid_log=uuid_log
+                )
+            else:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    msg_public="Internal server error.",
+                    uuid_log=uuid_log
+                )
+
+            content['message'] = 'ERROR'
+            content['error'] = logRecord.msg_public
+            statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            content['message'] = 'Page successfully scanned.'
+            content['data'] = {}
+            statusResponse = status.HTTP_200_OK
+
+        return Response(content, status=statusResponse)
+
+
+class OperationElementsSendClick(APIView):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = 'post'
+    # serializer_class
+    # queryset
+
+    def post(self, request,  **kwargs):
+        content = {
+            'message': None
+        }
+
+        uuid_session = kwargs.get('uuid_session')
+        uuid_element = kwargs.get('uuid_element')
+
+        try:
+            api.operation_element_click(uuid_session=uuid_session, uuid_auto_element=uuid_element)
+        except BaseException as e:
+            if hasattr(e, 'level'):
+                level_error = e.level
+            else:
+                level_error = 50
+            # -------------------------------
+            if hasattr(e, 'uuid_log'):
+                uuid_log = e.uuid_log
+            else:
+                uuid_log = None
+            # -------------------------------
+            if level_error <= 30:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    uuid_log=uuid_log
+                )
+            else:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    msg_public="Internal server error.",
+                    uuid_log=uuid_log
+                )
+
+            content['message'] = 'ERROR'
+            content['error'] = logRecord.msg_public
+            statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            content['message'] = 'Page successfully scanned.'
+            content['data'] = {}
+            statusResponse = status.HTTP_200_OK
+
+        return Response(content, status=statusResponse)
+
+
+class OperationGetCurrentUrl(APIView):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = 'get'
+    # serializer_class
+    # queryset
+
+    def get(self, request,  **kwargs):
+        content = {
+            'message': None,
+            'data': None
+        }
+
+        uuid_session = kwargs.get('uuid_session')
+
+        try:
+            current_url = api.operation_get_current_url(uuid_session=uuid_session)
+            content['data'] = current_url
+        except BaseException as e:
+            if hasattr(e, 'level'):
+                level_error = e.level
+            else:
+                level_error = 50
+            # -------------------------------
+            if hasattr(e, 'uuid_log'):
+                uuid_log = e.uuid_log
+            else:
+                uuid_log = None
+            # -------------------------------
+            if level_error <= 30:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    uuid_log=uuid_log
+                )
+            else:
+                logRecord = logger.info(
+                    msg=f"{str(e)}",
+                    msg_public="Internal server error.",
+                    uuid_log=uuid_log
+                )
+
+            content['message'] = 'ERROR'
+            content['error'] = logRecord.msg_public
+            statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            statusResponse = status.HTTP_200_OK
+
+        return Response(content, status=statusResponse)
+
