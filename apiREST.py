@@ -131,7 +131,7 @@ def session_operations_general(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def make_all_authorization(request):
-
+    # TODO send uuid error message
     content = {'message': ''}
     try:
         api.make_all_session_authorization()

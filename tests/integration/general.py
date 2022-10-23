@@ -9,16 +9,16 @@ class Test_000_REST(APITestCase):
         unitAuthJWT.UnitOperations.GetToken(self)
 
     def test_001_00_00_Interface(self):
-        resultGet = self.client.get("/pullgerMM/api/ping")
+        resultGet = self.client.get("/pullgerMSM/api/ping")
         self.assertEqual(resultGet.status_code, 200, "General API Critical error.")
 
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
-        resultGet = self.client.get("/pullgerMM/api/pingAuth")
+        resultGet = self.client.get("/pullgerMSM/api/pingAuth")
 
         self.assertEqual(resultGet.status_code, 200, "General API Critical error with authentication.")
 
     def test_002_00_00_AccessRestictions(self):
-        response = self.client.post('/pullgerMM/api/sessions')
+        response = self.client.post('/pullgerMSM/api/sessions')
         self.assertEqual(response.status_code, 401, "Incorrect functioning of the authorization check.")
 
         # self.client.request()
@@ -33,11 +33,13 @@ class Test_000_REST(APITestCase):
         from pullgerAccountManager__REST.tests import UnitOperations as UnitOperationsAMRest
         UnitOperationsAMRest.addAccountForLinkedIN(self)
 
-        UnitOperations.add_session_linkedin_standard(self)
+        from pullgerSquirrel.connectors import connector
+        # UnitOperations.add_session_linkedin_standard(self)
+        UnitOperations.add_session(self, connector.selenium.stand_alone.general)
 
         UnitOperations.make_all_session_authorization(self)
 
-        pass
+        UnitOperations.kill_all_sessions(self)
 
     def test_005_00_00_GeneralOperations(self):
         def createAndKillStandardSessions():
@@ -55,7 +57,7 @@ class Test_000_REST(APITestCase):
 
         createAndKillStandardSessions();
 
-    def test_000_00_00_ExecutingQueue(self):
+    def test_010_00_00_ExecutingQueue(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
 
         UnitOperations.execute_task_in_the_queue(self)

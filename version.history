@@ -1,5 +1,9 @@
 Version history [pullgerMultiSessionManager__REST]
 
+{0.1.0.1} [pullgerMultiSessionManager__REST]
+ - fix bug on kill session
+
+
 {0.1.0.0} [pullgerMultiSessionManager__REST]
  - migrate to pullgerInternalControl module from pullgerExceptions and pullgerLogging
  - bring some code to PEP8 standards
