@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from pullgerMultiSessionManager import api
+from pullgerMultiSessionManager import apiMSM
 from pullgerAccountManager import authorizationsServers
 from pullgerSquirrel import connectors
 from pullgerInternalControl.pullgerMultiSessionManager.REST.logging import logger
@@ -17,12 +17,14 @@ class Ping(APIView):
         content ={'message': 'Pong: MultiSessionManager'}
         return Response(content)
 
+
 class PingAuth(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        content ={'message': 'Pong: AUTH MultisessionManager'}
+        content = {'message': 'Pong: AUTH MultisessionManager'}
         return Response(content)
+
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -34,6 +36,7 @@ def pingParam(request, uuid):
         content = {'message': 'POST Pong:' + uuid}
         return Response(content)
 
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def session_operations(request, uuid):
@@ -43,11 +46,11 @@ def session_operations(request, uuid):
 
     if request.method == 'DELETE':
         try:
-            api.kill_session(uuid=uuid)
+            apiMSM.kill_session(uuid_session=uuid)
             content['message'] = f'Session {uuid} deleted:'
             statusResp = status.HTTP_200_OK
         except BaseException as e:
-            logger.critical(f"Error on executing request [{str(request)}] execute 'pullgerMultiSessionManager.api.killSession()': {str(e)}")
+            logger.critical(f"Error on executing request [{str(request)}] execute 'pullgerMultiSessionManager.apiMSM.killSession()': {str(e)}")
             content['message'] = 'error'
             statusResp = status.HTTP_500_INTERNAL_SERVER_ERROR
 
@@ -66,7 +69,7 @@ def session_operations_general(request):
             'data': ''
         }
         try:
-            sessionList = api.get_sessions_list()
+            sessionList = apiMSM.get_sessions_list()
             serializedContent = serializers.SessionsListSerializer(sessionList, many=True)
             content['message'] = 'OK'
             content['data'] = serializedContent.data
@@ -108,14 +111,14 @@ def session_operations_general(request):
         else:
             try:
                 if errorExist is False:
-                    uuidSession = api.add_new_session(authorization=authorization, conn=conn)
+                    uuidSession = apiMSM.add_new_session(authorization=authorization, conn=conn)
                     content['message'] = 'Session added'
-                    content['data'] = {'uuid': uuidSession}
+                    content['data'] = {'uuid': str(uuidSession)}
                     statusResponse = status.HTTP_200_OK
-                    logger.info(f"Session with uuid [{uuidSession}] was successfully added")
+                    logger.info(f"Session with uuid [{str(uuidSession)}] was successfully added")
             except BaseException as e:
                 logger.critical(
-                    f"Error on request {str(request)} execute pullgerMultiSessionManager.api.addNewSession(): {str(e)}")
+                    f"Error on request {str(request)} execute pullgerMultiSessionManager.apiMSM.addNewSession(): {str(e)}")
                 content['message'] = f'error: {str(e)}'
                 statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
 
@@ -134,12 +137,12 @@ def make_all_authorization(request):
     # TODO send uuid error message
     content = {'message': ''}
     try:
-        api.make_all_session_authorization()
+        apiMSM.make_all_session_authorization()
         content['message'] = 'OK'
         statusResponse = status.HTTP_200_OK
     except BaseException as e:
         logger.critical(
-            msg=f"Error on request {str(request)} execute 'pullgerMultiSessionManager.api.makeAllSessionAuthorization': {str(e)}"
+            msg=f"Error on request {str(request)} execute 'pullgerMultiSessionManager.apiMSM.makeAllSessionAuthorization': {str(e)}"
         )
         content ={'message': f'Internal system error.'}
         statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -163,7 +166,7 @@ class ExecuteTaskInTheQueue(APIView):
         }
 
         try:
-            api.execute_task_in_the_queue()
+            apiMSM.execute_task_in_the_queue()
         except BaseException as e:
             logRecord = logger.info(
                 msgPrivat=f"{str(e)}",
@@ -197,7 +200,7 @@ class OperationGetPage(APIView):
         url = request.query_params.get('url')
 
         try:
-            api.operation_get_page(uuid_session=uuid, url=url)
+            apiMSM.operation_get_page(uuid_session=uuid, url=url)
             statusResponse = status.HTTP_200_OK
         except BaseException as e:
             log_record = logger.info(
@@ -227,7 +230,7 @@ class OperationGetHTML(APIView):
         uuid = kwargs.get('uuid')
 
         try:
-            page_html = api.operation_get_html(uuid_session=uuid)
+            page_html = apiMSM.operation_get_html(uuid_session=uuid)
             content = page_html
             statusResponse = status.HTTP_200_OK
         except BaseException as e:
@@ -259,7 +262,7 @@ class OperationElementsScan(APIView):
 
         amount = None
         try:
-            amount = api.operation_elements_scan(uuid_session=uuid_session)
+            amount = apiMSM.operation_elements_scan(uuid_session=uuid_session)
         except BaseException as e:
             if hasattr(e, 'level'):
                 level_error = e.level
@@ -308,7 +311,7 @@ class OperationElementsList(APIView):
         uuid_session = kwargs.get('uuid_session')
 
         try:
-            elements_list = api.operation_elements_list(uuid_session=uuid_session)
+            elements_list = apiMSM.operation_elements_list(uuid_session=uuid_session)
             content['data'] = elements_list
         except BaseException as e:
             if hasattr(e, 'level'):
@@ -358,7 +361,7 @@ class OperationElementsSendString(APIView):
         send_string = request.data.get("string")
 
         try:
-            api.operation_element_send_string(uuid_session=uuid_session, uuid_auto_element=uuid_element, string=send_string)
+            apiMSM.operation_element_send_string(uuid_session=uuid_session, uuid_auto_element=uuid_element, string=send_string)
         except BaseException as e:
             if hasattr(e, 'level'):
                 level_error = e.level
@@ -408,7 +411,7 @@ class OperationElementsSendEnter(APIView):
         uuid_element = kwargs.get('uuid_element')
 
         try:
-            api.operation_element_send_enter(uuid_session=uuid_session, uuid_auto_element=uuid_element)
+            apiMSM.operation_element_send_enter(uuid_session=uuid_session, uuid_auto_element=uuid_element)
         except BaseException as e:
             if hasattr(e, 'level'):
                 level_error = e.level
@@ -458,7 +461,7 @@ class OperationElementsSendClick(APIView):
         uuid_element = kwargs.get('uuid_element')
 
         try:
-            api.operation_element_click(uuid_session=uuid_session, uuid_auto_element=uuid_element)
+            apiMSM.operation_element_click(uuid_session=uuid_session, uuid_auto_element=uuid_element)
         except BaseException as e:
             if hasattr(e, 'level'):
                 level_error = e.level
@@ -508,7 +511,7 @@ class OperationGetCurrentUrl(APIView):
         uuid_session = kwargs.get('uuid_session')
 
         try:
-            current_url = api.operation_get_current_url(uuid_session=uuid_session)
+            current_url = apiMSM.operation_get_current_url(uuid_session=uuid_session)
             content['data'] = current_url
         except BaseException as e:
             if hasattr(e, 'level'):

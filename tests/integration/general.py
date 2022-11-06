@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from pullgerAuthJWT.tests import unit as unitAuthJWT
-from pullgerMultiSessionManager__REST.tests import UnitOperations
+from pullgerMultiSessionManager__REST.tests.tools import unitOperationsMSMRest
 
 
 class Test_000_REST(APITestCase):
@@ -30,20 +30,20 @@ class Test_000_REST(APITestCase):
     def test_004_00_00_LinkedIN_Sessions(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
 
-        from pullgerAccountManager__REST.tests import UnitOperations as UnitOperationsAMRest
-        UnitOperationsAMRest.addAccountForLinkedIN(self)
+        from pullgerAccountManager__REST.tests.tools import unitOperationsAMRest as UnitOperationsAMRest
+        UnitOperationsAMRest.add_account_for_linkedin(self)
 
         from pullgerSquirrel.connectors import connector
         # UnitOperations.add_session_linkedin_standard(self)
-        UnitOperations.add_session(self, connector.selenium.stand_alone.general)
+        unitOperationsMSMRest.add_session(self, connector.selenium.stand_alone.general)
 
-        UnitOperations.make_all_session_authorization(self)
+        unitOperationsMSMRest.make_all_session_authorization(self)
 
-        UnitOperations.kill_all_sessions(self)
+        unitOperationsMSMRest.kill_all_sessions(self)
 
     def test_005_00_00_GeneralOperations(self):
         def createAndKillStandardSessions():
-            UnitOperations.addSession(self)
+            unitOperationsMSMRest.addSession(self)
             #TODO Fix error on creatin session
             #TODO Add request for delete sesion
             pass
@@ -60,7 +60,7 @@ class Test_000_REST(APITestCase):
     def test_010_00_00_ExecutingQueue(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
 
-        UnitOperations.execute_task_in_the_queue(self)
+        unitOperationsMSMRest.execute_task_in_the_queue(self)
 
         pass
 
