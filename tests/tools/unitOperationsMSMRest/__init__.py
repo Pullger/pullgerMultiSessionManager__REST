@@ -67,7 +67,7 @@ def add_session_linkedin_no_head(self: APITestCase):
 
 
 def make_all_session_authorization(self: APITestCase):
-    response_create_session = self.client.put(f'/pullgerMSM/api/sessions/makeAllSessionAuthorization')
+    response_create_session = self.client.put(f'/pullgerMSM/api/sessions/make-all-session-authorization')
     self.assertEqual(response_create_session.status_code, 200, 'Error on authorization sessions')
 
 
@@ -82,6 +82,6 @@ def kill_all_sessions(self: APITestCase):
 
 
 def execute_task_in_the_queue(self: APITestCase):
-    resultPost = self.client.post(f"/pullgerMSM/api/sessions/executeTaskInTheQueue")
+    resultPost = self.client.post(f"/pullgerMSM/api/sessions/execute-task-in-the-queue")
     self.assertEqual(resultPost.status_code, 200, "Error on task executed.")
 

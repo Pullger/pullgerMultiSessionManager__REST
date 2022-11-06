@@ -1,5 +1,8 @@
 Version history [pullgerMultiSessionManager__REST]
 
+{0.1.2.0} [pullgerMultiSessionManager__REST]
+ - Standardization REST API names
+
 {0.1.1.0} [pullgerMultiSessionManager__REST]
  - Standardization of name space
 
