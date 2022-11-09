@@ -1,7 +1,6 @@
-from django.test import TestCase
 from rest_framework.test import APITestCase
 from pullgerAuthJWT.tests import unit as unit_auth_jwt
-from pullgerMultiSessionManager__REST.tests import UnitOperations
+from pullgerMultiSessionManager__REST.tests.tools import unitOperationsMSMRest
 
 
 class Test_000_Operations(APITestCase):
@@ -9,7 +8,7 @@ class Test_000_Operations(APITestCase):
         unit_auth_jwt.UnitOperations.CreateUser(self)
         unit_auth_jwt.UnitOperations.GetToken(self)
 
-    def test_001_00_00_send_string_operation_all_sessions(self):
+    def test_002_00_00_send_string_operation_all_sessions(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
 
         from pullgerSquirrel.connectors import connector
@@ -21,7 +20,8 @@ class Test_000_Operations(APITestCase):
         #                 uuid_session = UnitOperations.add_new_session_selenium_headless(self)
 
         # uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.standard)
-        uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.headless)
+        # uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.headless)
+        uuid_session = unitOperationsMSMRest.add_session(self, connector.selenium.stand_alone.general)
 
         url = "https://google.com"
         resultGet = self.client.get(f"/pullgerMSM/api/sessions/{uuid_session}/get_page?url={url}")
@@ -53,7 +53,7 @@ class Test_000_Operations(APITestCase):
 
         self.client.delete(f"/pullgerMSM/api/sessions/{uuid_session}")
 
-    def test_000_00_00_send_string_operation_all_sessions(self):
+    def test_000_01_00_send_string_operation_all_sessions(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
 
         from pullgerSquirrel.connectors import connector
@@ -65,7 +65,9 @@ class Test_000_Operations(APITestCase):
         #                 uuid_session = UnitOperations.add_new_session_selenium_headless(self)
 
         # uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.standard)
-        uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.headless)
+        # uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.headless)
+        uuid_session = unitOperationsMSMRest.add_session(self, connector.selenium.stand_alone.general)
+
 
         url = "https://translate.google.com"
         resultGet = self.client.get(f"/pullgerMSM/api/sessions/{uuid_session}/get_page?url={url}")

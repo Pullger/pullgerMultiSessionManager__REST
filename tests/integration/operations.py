@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from pullgerAuthJWT.tests import unit as unit_auth_jwt
-from pullgerMultiSessionManager__REST.tests import UnitOperations
+from pullgerMultiSessionManager__REST.tests.tools import unitOperationsMSMRest
 
 
 class Test_000_Operations(APITestCase):
@@ -13,7 +13,7 @@ class Test_000_Operations(APITestCase):
 
         from pullgerSquirrel.connectors import connector
 
-        uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.standard)
+        uuid_session = unitOperationsMSMRest.add_session(self, connector.selenium.chrome.standard)
         # uuid_session = UnitOperations.add_session(self, connector.selenium.chrome.headless)
 
         url = "https://google.com"

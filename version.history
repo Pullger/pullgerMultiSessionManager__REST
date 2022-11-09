@@ -1,11 +1,19 @@
 Version history [pullgerMultiSessionManager__REST]
 
+{0.1.2.0} [pullgerMultiSessionManager__REST]
+ - Standardization REST API names
+
+{0.1.1.0} [pullgerMultiSessionManager__REST]
+ - Standardization of name space
+
+{0.1.0.1} [pullgerMultiSessionManager__REST]
+ - fix bug on kill session
+
 {0.1.0.0} [pullgerMultiSessionManager__REST]
  - migrate to pullgerInternalControl module from pullgerExceptions and pullgerLogging
  - bring some code to PEP8 standards
  - append tests
  - actualise API REST to API of module pullgerMultiSessionManager
-
 
 {0.0.0.0} [pullgerMultiSessionManager__REST]
  - initialization
