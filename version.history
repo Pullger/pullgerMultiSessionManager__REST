@@ -1,5 +1,9 @@
 Version history [pullgerMultiSessionManager__REST]
 
+{0.1.3.0} [pullgerMultiSessionManager__REST]
+ - Standardization REST API names
+ - Add Finalization REST method
+
 {0.1.2.0} [pullgerMultiSessionManager__REST]
  - Standardization REST API names
 

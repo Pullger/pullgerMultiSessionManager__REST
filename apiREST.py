@@ -185,6 +185,38 @@ class ExecuteTaskInTheQueue(APIView):
     # path('sessions/<str:uuid>/get_html', apiREST.OperationGetHTML.as_view()),
 
 
+class FinalizeAllTask(APIView):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = 'post'
+    # serializer_class
+    # queryset
+
+    def post(self, request):
+        content = {
+            'message': None
+        }
+
+        try:
+            result = apiMSM.execute_finalizer()
+        except BaseException as e:
+            logRecord = logger.info(
+                msgPrivat=f"{str(e)}",
+                msgPublic="Internal server error."
+            )
+            # content['message'] = 'Pong: Thread Task'
+            content['error'] = logRecord.msgPublic
+            statusResponse = status.HTTP_500_INTERNAL_SERVER_ERROR
+        else:
+            content['message'] = 'Tasks finalization executed'
+            content['data'] = result
+            statusResponse = status.HTTP_200_OK
+
+        return Response(content, status=statusResponse)
+
+    # path('sessions/<str:uuid>/get_page', apiREST.OperationGetPage.as_view()),
+    # path('sessions/<str:uuid>/get_html', apiREST.OperationGetHTML.as_view()),
+
+
 class OperationGetPage(APIView):
     permission_classes = (IsAuthenticated,)
     http_method_names = 'get'
